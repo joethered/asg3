@@ -19,9 +19,50 @@ listmap<Key,Value,Less>::~listmap () {
 
 template <typename Key, typename Value, class Less>
 void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
+   if (head == NULL){
+      head = tail = new node(pair);
+   }else if (head = tail){
+      if (head->pair.first == pair.first){
+         head->pair = pair;
+      }else if (pair.first > head->pair.first){
+         tail = new node(pair);
+         tail->prev = head;
+         head->next =  tail;
+      }else{
+         head = new node(pair);
+         tail->prev = head;
+         head->next =  tail;
+      }
+   }else{
+      node* tp = head;
+      if (tp )
+      while (tp != NULL){
+         if (tp->pair.first == pair.first){
+            tp->pair = pair;
+            return;
+         }else if (pair.first < tp->pair.first){
+            node* np_new = new node(pair);
+            tp->prev->next = np_new;
+            np_new->prev = tp->prev;
+            np_new->next = tp;
+            tp->prev = np_new;
+            return;
+         }
+         if (tp == tail){
+            tail->next = new node(pair);
+            tail->next->prev = tail;
+            tail = tail->next;
+         }
+      }
+
+   }
+
+
    TRACE ('l', &pair << "->" << pair);
 }
 
+
+//----------------Iterator-------------------
 template <typename Key, typename Value, class Less>
 typename listmap<Key,Value,Less>::iterator
 listmap<Key,Value,Less>::find (const key_type& that) const {
