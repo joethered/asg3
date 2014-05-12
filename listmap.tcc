@@ -32,11 +32,11 @@ void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
       if (head->pair.first == pair.first){
          head->pair = pair;
       }else if (less (pair.first, head->pair.first)){
-         tail = new node(pair);
+         head = new node(pair);
          tail->prev = head;
          head->next =  tail;
       }else{
-         head = new node(pair);
+         tail = new node(pair);
          tail->prev = head;
          head->next =  tail;
       }
@@ -48,7 +48,10 @@ void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
             return;
          }else if (less (pair.first, tp->pair.first)){
             node* np_new = new node(pair);
-            tp->prev->next = np_new;
+            if (tp->prev != NULL)
+               tp->prev->next = np_new;
+            else
+               head = np_new;
             np_new->prev = tp->prev;
             np_new->next = tp;
             tp->prev = np_new;
@@ -61,8 +64,6 @@ void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
          }
          tp = tp->next;
       }
-
-
    }
 
    TRACE ('l', &pair << "->" << pair);

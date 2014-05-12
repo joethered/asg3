@@ -81,7 +81,7 @@ int main (int argc, char** argv) {
 
                 //if the first char is a #
                 //it's a comment and is ignored
-                if(line[0]=='#')
+                if(line[0]=='#' || line.size() == 0)
                     continue;
 
                 //get rid of all whitespace
@@ -97,6 +97,7 @@ int main (int argc, char** argv) {
                         cout << itor->first << " = "
                                     << itor->second << endl;
                     }
+                    continue;
                 }
 
                 //if input is "=value", prints out all the
@@ -112,6 +113,7 @@ int main (int argc, char** argv) {
                             cout << itor->first << " = " <<
                                                 itor->second << endl;
                     }
+                    continue;
                 }
 
                 //found holds position of the first equals sign
@@ -138,7 +140,7 @@ int main (int argc, char** argv) {
 
                 //if there was no value, just "key=",
                 //erase that key from the map
-                if(found == line.size()-1)
+                if(found == line.size()-1 && key != "")
                 {
                     auto itor=the_map->find(key);
                     if(key == itor->first)
