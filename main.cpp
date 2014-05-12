@@ -89,7 +89,7 @@ int main (int argc, char** argv) {
 
                 //if the input is just "=", print out all the
                 //key value pairs in lexicographic order
-                if(line[0]=='=' && line.size()==1)
+                if(line[0]=='=' && line.size()==1 && !the_map->empty())
                 {
                     for(auto itor = the_map->begin();
                             itor!=the_map->end();++itor)
@@ -103,7 +103,8 @@ int main (int argc, char** argv) {
                 //if input is "=value", prints out all the
                 //key value pairs
                 //with that value in lexicographic order
-                if(line[0] == '=' && line.size()>1)
+                if(line[0] == '=' && line.size()>1
+                                    && !the_map->empty())
                 {
                     string value = line.substr(1);
                     for(auto itor = the_map->begin();
@@ -121,7 +122,7 @@ int main (int argc, char** argv) {
 
                 //if there was no equals sign in the string,
                 //print out the key value pair if possible
-                if(found == std::string::npos)
+                if(found == std::string::npos && !the_map->empty())
                 {
                     auto itor=the_map->find(line);
                     if(line == itor->first)
@@ -140,7 +141,8 @@ int main (int argc, char** argv) {
 
                 //if there was no value, just "key=",
                 //erase that key from the map
-                if(found == line.size()-1 && key != "")
+                if(found == line.size()-1 && key != ""
+                                    && !the_map->empty())
                 {
                     auto itor=the_map->find(key);
                     if(key == itor->first)
