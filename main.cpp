@@ -54,35 +54,65 @@ void trim(string *line)
 }
 
 int main (int argc, char** argv) {
-   sys_info::set_execname (argv[0]);
-   scan_options (argc, argv);
-   str_str_map *the_map = new str_str_map();
-   for (int argi = 1; argi < argc; ++argi) {
+    sys_info::set_execname (argv[0]);
+    scan_options (argc, argv);
+    str_str_map *the_map = new str_str_map();
+    for (int argi = 1; argi < argc; ++argi)
+    {
 
-      //line will be the current line from the file.
-      string line;
-      ifstream myfile;
+        //line will be the current line from the file.
+        string line;
+        ifstream myfile;
 
-      string filename = argv[argi];
+        string filename = argv[argi];
 
-      myfile.open(filename);
+        myfile.open(filename);
 
-      if (myfile.is_open())
-      {
-         int line_num = 0;
+        if (myfile.is_open())
+        {
+            int line_num = 0;
+
             //reads in from the file line by line
             while ( getline (myfile,line) )
             {
-               line_num++;
+                line_num++;
+                cout << filename << ": " << line_num
+                    << ": " << line << endl;
 
-               cout << filename << ": " << line_num << ": " << line << endl;
-
-                //if the first char is a # it's a comment and is ignored
+                //if the first char is a #
+                //it's a comment and is ignored
                 if(line[0]=='#')
                     continue;
 
+                //get rid of all whitespace
                 trim(&line);
 
+                //if the input is just "=", print out all the
+                //key value pairs in lexicographic order
+                if(line[0]=='=' && line.size()==1)
+                {
+                    for(auto itor = the_map->begin();
+                            itor!=the_map->end();++itor)
+                    {
+                        cout << itor->first << " = "
+                                    << itor->second << endl;
+                    }
+                }
+
+                //if input is "=value", prints out all the
+                //key value pairs
+                //with that value in lexicographic order
+                if(line[0] == '=' && line.size()>1)
+                {
+                    string value = line.substr(1);
+                    for(auto itor = the_map->begin();
+                                    itor!=the_map->end();++itor)
+                    {
+                        if (value == itor->second)
+                            cout << itor->first << " = " <<
+                                                itor->second << endl;
+                    }
+                }
 
                 //found holds position of the first equals sign
                 size_t found = line.find_first_of("=");
@@ -93,7 +123,8 @@ int main (int argc, char** argv) {
                 {
                     auto itor=the_map->find(line);
                     if(line == itor->first)
-                        cout << itor->first << " = " << itor->second << endl;
+                        cout << itor->first << " = " << itor->second
+                                                            << endl;
                     else
                         cout << line << ": key not found" << endl;
 
@@ -101,7 +132,8 @@ int main (int argc, char** argv) {
                 }
 
 
-                //split up line around the '=' to make two strings, key and value
+                //split up line around the '=' to make two strings,
+                //key and value
                 string key = line.substr(0,found);
 
                 //if there was no value, just "key=",
@@ -120,29 +152,26 @@ int main (int argc, char** argv) {
 
                 string value = line.substr(found+1);
 
-                //construct a new pair using key and value and insert it into the map
-                str_str_pair *insert_pair = new str_str_pair(key, value);
+                //construct a new pair using key and value and insert
+                //it into the map
+                str_str_pair *insert_pair =
+                                        new str_str_pair(key, value);
                 the_map->insert (*insert_pair);
 
             }
 
             myfile.close();
       }
-
-  else cout << "Unable to open file";
-
+      else
+      {
+            cout << "Unable to open file" << endl;
+            delete the_map;
+            return EXIT_FAILURE;
+      }
 
    }
+   delete the_map;
 
-   //for (str_str_map::iterator itor = the_map->begin();
-   //     itor != the_map->end(); ++itor) {
-   //  cout << "During iteration: " << *itor << endl;
-   //}
-
-   str_str_map::iterator itor = the_map->begin();
-   itor.erase();
-
-   //cout << "EXIT_SUCCESS" << endl;
    return EXIT_SUCCESS;
 }
 
