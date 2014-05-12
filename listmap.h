@@ -29,7 +29,7 @@ class listmap {
       listmap& operator= (const listmap&);
       ~listmap();
       void insert (const value_type&);
-      iterator find (const key_type&) const;
+      iterator find (const key_type&);
       iterator begin();
       iterator end();
       bool empty() const;

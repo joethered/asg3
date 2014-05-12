@@ -77,6 +77,8 @@ int main (int argc, char** argv) {
                 //found holds position of the first equals sign
                 size_t found = line.find_first_of("=");
 
+                //if there was no equals sign in the string,
+                //print out the key value pair if possible
                 if(found == std::string::npos)
                 {
                     auto itor=the_map->find(line);
@@ -91,9 +93,17 @@ int main (int argc, char** argv) {
                 //split up line around the '=' to make two strings, key and value
                 string key = line.substr(0,found-1);
 
-                if(found=line.size()-1)
+                //if there was no value, just "key=",
+                //erase that key from the map
+                if(found == line.size()-1)
                 {
-                    the_map->erase(key);
+                    auto itor=the_map->find(key);
+                    if(key == itor->first)
+                        itor.erase();
+                    else
+                        cout << key << ": key not found" << endl;
+
+                    continue;
                 }
 
                 string value = line.substr(found+1);

@@ -64,7 +64,7 @@ void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
 //----------------Iterator-------------------
 template <typename Key, typename Value, class Less>
 typename listmap<Key,Value,Less>::iterator
-listmap<Key,Value,Less>::find (const key_type& that) const {
+listmap<Key,Value,Less>::find (const key_type& that) {
    node* iter_p = this->head;
 
    while (iter_p->pair.first != that){
