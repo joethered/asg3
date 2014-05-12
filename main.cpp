@@ -39,11 +39,25 @@ void scan_options (int argc, char** argv) {
 }
 
 
+void trim(string *line)
+{
+    //Trim White Space:
+    //found_white_space holds position of first instance of whitespace
+    size_t found_white_space = line->find_first_of(" ");
+
+    //goes through the line and erases all whitespace
+    while(found_white_space!=std::string::npos)
+    {
+        line->erase(found_white_space, 1);
+        found_white_space = line->find_first_of(" ");
+    }
+}
+
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
 
-   str_str_map test;
+   str_str_map *the_map = new str_str_map();
    for (int argi = 0; argi < argc; ++argi) {
 
       //line will be the current line from the file.
@@ -58,27 +72,35 @@ int main (int argc, char** argv) {
                 if(line[0]=='#')
                     continue;
 
-                //found_white_space holds position of first instance of whitespace
-                size_t found_white_space = line.find_first_of(" ");
-
-                //goes through the line and erases all whitespace
-                while(found_white_space!=std::string::npos)
-                {
-                    line.erase(found_white_space, 1);
-                    found_white_space = line.find_first_of(" ");
-                }
+                trim(&line);
 
                 //found holds position of the first equals sign
                 size_t found = line.find_first_of("=");
 
+                if(found == std::string::npos)
+                {
+                    auto itor=the_map->find(line);
+                    if(line == itor->first)
+                        cout << "<" << itor->first << "," << itor->second << ">" << endl;
+                    else
+                        cout << line << ": key not found" << endl;
+
+                    continue;
+                }
+
                 //split up line around the '=' to make two strings, key and value
                 string key = line.substr(0,found-1);
+
+                if(found=line.size()-1)
+                {
+                    the_map->erase(key);
+                }
+
                 string value = line.substr(found+1);
 
                 //construct a new pair using key and value and insert it into the map
-                str_str_pair insert_pair (key, value);
-                test.insert (insert_pair);
-
+                str_str_pair *insert_pair = new str_str_pair(key, value);
+                the_map->insert (*insert_pair);
             }
 
             myfile.close();
@@ -89,12 +111,12 @@ int main (int argc, char** argv) {
 
    }
 
-   for (str_str_map::iterator itor = test.begin();
-        itor != test.end(); ++itor) {
+   for (str_str_map::iterator itor = the_map->begin();
+        itor != the_map->end(); ++itor) {
       cout << "During iteration: " << *itor << endl;
    }
 
-   str_str_map::iterator itor = test.begin();
+   str_str_map::iterator itor = the_map->begin();
    itor.erase();
 
    cout << "EXIT_SUCCESS" << endl;
