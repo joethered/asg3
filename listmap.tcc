@@ -21,7 +21,7 @@ template <typename Key, typename Value, class Less>
 void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
    if (head == NULL){
       head = tail = new node(pair);
-   }else if (head = tail){
+   }else if (head == tail){
       if (head->pair.first == pair.first){
          head->pair = pair;
       }else if (pair.first > head->pair.first){
@@ -57,7 +57,6 @@ void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
 
    }
 
-
    TRACE ('l', &pair << "->" << pair);
 }
 
@@ -66,8 +65,17 @@ void listmap<Key,Value,Less>::insert (const xpair<Key,Value>& pair) {
 template <typename Key, typename Value, class Less>
 typename listmap<Key,Value,Less>::iterator
 listmap<Key,Value,Less>::find (const key_type& that) const {
+   node* iter_p = this->head;
+
+   while (iter_p->pair.first != that){
+      if (iter_p->next ==  NULL)
+         break;
+      else
+         iter_p = iter_p->next;
+   }
+
    TRACE ('l', that);
-   return iterator();
+   return iterator(this, iter_p);
 }
 
 template <typename Key, typename Value, class Less>
@@ -129,6 +137,15 @@ listmap<Key,Value,Less>::iterator::iterator (listmap *map,
 
 template <typename Key, typename Value, class Less>
 void listmap<Key,Value,Less>::iterator::erase () {
+   if (this->where->prev != NULL){
+       this->where->prev->next = this->where->next;
+   }
+   if (this->where->next != NULL){
+       this->where->next->prev = this->where->prev;
+   }
+   delete this->where;
+
+
    TRACE ('l', "map = " << map << ", where = " << where << endl);
 }
 
