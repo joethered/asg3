@@ -134,6 +134,12 @@ int main (int argc, char** argv) {
                     continue;
                 }
 
+                if(found == std::string::npos && the_map->empty())
+                {
+                    cout << line << ": key not found" << endl;
+                    continue;
+                }
+
 
                 //split up line around the '=' to make two strings,
                 //key and value
