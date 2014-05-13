@@ -69,8 +69,10 @@ void trim(string *line)
         size_t i=found_equals-1;
         if(i>=0)
         {
+            cout << "trimming space before equals sign" << endl;
             while(i>=0 && line->at(i)==' ')
             {
+                cout << "i=" << i << endl;
                 line->erase(i, 1);
                 if(i-1 < 0)
                     break;
@@ -83,8 +85,11 @@ void trim(string *line)
         i=found_equals+1;
         if(i<line->size())
         {
+            cout << "trimming space after equals sign" << endl;
             while(i<line->size() && line->at(i)==' ')
             {
+                cout << "i=" << i << endl;
+
                 line->erase(i, 1);
                 if(i+1 >= line->size())
                     break;
