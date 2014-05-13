@@ -46,6 +46,7 @@ void trim(string *line)
     size_t found_white_space = line->find_first_of(" ");
 
     //erase white space before the key
+    cout<< "before key" << endl;
     if(found_white_space==0)
     {
         size_t i=0;
@@ -59,7 +60,11 @@ void trim(string *line)
     size_t found_equals = line->find_first_of("=");
 
     //erase whitespace surrounding the equals sign
-    if(found_equals!=std::string::npos)
+    if(found_equals==0 && line->size()==1)
+    {
+        //if there is just an equals sign don't do anything
+    }
+    else if(found_equals!=std::string::npos)
     {
         size_t i=found_equals-1;
 
