@@ -45,12 +45,40 @@ void trim(string *line)
     //found_white_space holds position of first instance of whitespace
     size_t found_white_space = line->find_first_of(" ");
 
-    //goes through the line and erases all whitespace
-    while(found_white_space!=std::string::npos)
+    //erase white space before the key
+    if(found_white_space==0)
     {
-        line->erase(found_white_space, 1);
-        found_white_space = line->find_first_of(" ");
+        size_t i=0;
+        while(line->at(i)==' ')
+        {
+            line->erase(i, 1);
+            i++;
+        }
     }
+
+    size_t found_equals = line->find_first_of("=");
+
+    //erase whitespace surrounding the equals sign
+    if(found_equals!=std::string::npos)
+    {
+        size_t i=found_equals-1;
+        while(line->at(i)==' ')
+        {
+            line->erase(i, 1);
+            i--;
+        }
+
+        i=found_equals+1;
+        while(line->at(i)==' ')
+        {
+            line->erase(i, 1);
+            i++;
+        }
+    }
+
+    found_white_space = line->find_last_not_of(" ");
+    if (found_white_space!=std::string::npos)
+        line->erase(found_white_space+1);
 }
 
 int main (int argc, char** argv) {
@@ -86,6 +114,10 @@ int main (int argc, char** argv) {
 
                 //get rid of all whitespace
                 trim(&line);
+
+                //if after trimming the string is empty, continue
+                if(line.size() == 0)
+                    continue;
 
                 //if the input is just "=", print out all the
                 //key value pairs in lexicographic order
