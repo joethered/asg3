@@ -62,23 +62,19 @@ void trim(string *line)
     if(found_equals!=std::string::npos)
     {
         size_t i=found_equals-1;
-        if(i>=0)
+
+        while(i>=0 && line->at(i)==' ')
         {
-            while(line->at(i)==' ')
-            {
-                line->erase(i, 1);
-                i--;
-            }
+            line->erase(i, 1);
+            i--;
         }
 
-        if(i<line->size())
+
+        i=found_equals+1;
+        while(i<line->size() && line->at(i)==' ')
         {
-            i=found_equals+1;
-            while(line->at(i)==' ')
-            {
-                line->erase(i, 1);
-                i++;
-            }
+            line->erase(i, 1);
+            i++;
         }
     }
 
